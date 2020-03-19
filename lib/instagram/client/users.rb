@@ -17,8 +17,8 @@ module Instagram
       # @see http://instagram.com/developer/endpoints/users/#get_users
       def user(*args)
         options = args.last.is_a?(Hash) ? args.pop : {}
-        id = args.first || 'self'
-        response = get("users/#{id}", options)
+        id = args.first || 'me'
+        response = get("#{id}", options, signature=false, raw=false, unformatted=true, no_response_wrapper=true, graph_request: true)
         response
       end
 
@@ -34,10 +34,10 @@ module Instagram
       # @see http://instagram.com/developer/endpoints/users/#get_users_search
       # @example Return users that match "Shayne Sweeney"
       #   Instagram.user_search("Shayne Sweeney")
-      def user_search(query, options={})
-        response = get('users/search', options.merge(:q => query))
-        response
-      end
+      # def user_search(query, options={})
+      #   response = get('users/search', options.merge(:q => query))
+      #   response
+      # end
 
       # Returns a list of users whom a given user follows
       #
@@ -60,12 +60,12 @@ module Instagram
       #
       #   If getting this data of a protected user, you must authenticate (and be allowed to see that user).
       # @rate_limited true
-      def user_follows(*args)
-        options = args.last.is_a?(Hash) ? args.pop : {}
-        id = args.first || "self"
-        response = get("users/#{id}/follows", options)
-        response
-      end
+      # def user_follows(*args)
+      #   options = args.last.is_a?(Hash) ? args.pop : {}
+      #   id = args.first || "self"
+      #   response = get("users/#{id}/follows", options)
+      #   response
+      # end
     end
 
     # Returns a list of users whom a given user is followed by
@@ -89,12 +89,12 @@ module Instagram
     #
     #   If getting this data of a protected user, you must authenticate (and be allowed to see that user).
     # @rate_limited true
-    def user_followed_by(*args)
-      options = args.last.is_a?(Hash) ? args.pop : {}
-      id = args.first || "self"
-      response = get("users/#{id}/followed-by", options)
-      response
-    end
+    # def user_followed_by(*args)
+    #   options = args.last.is_a?(Hash) ? args.pop : {}
+    #   id = args.first || "self"
+    #   response = get("users/#{id}/followed-by", options)
+    #   response
+    # end
 
     # Returns a list of users who have requested the currently authorized user's permission to follow
     #
@@ -111,10 +111,10 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def user_requested_by()
-      response = get("users/self/requested-by")
-      response
-    end
+    # def user_requested_by()
+    #   response = get("users/self/requested-by")
+    #   response
+    # end
 
     # Returns most recent media items from the currently authorized user's feed
     #
@@ -130,11 +130,11 @@ module Instagram
     # @authenticated true
     # @rate_limited true
     # @see http://instagram.com/developer/endpoints/users/#get_users_feed
-    def user_media_feed(*args)
-      options = args.first.is_a?(Hash) ? args.pop : {}
-      response = get('users/self/feed', options)
-      response
-    end
+    # def user_media_feed(*args)
+    #   options = args.first.is_a?(Hash) ? args.pop : {}
+    #   response = get('users/self/feed', options)
+    #   response
+    # end
 
     # Returns a list of recent media items for a given user
     #
@@ -159,8 +159,8 @@ module Instagram
     # @rate_limited true
     def user_recent_media(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
-      id = args.first || "self"
-      response = get("users/#{id}/media/recent", options)
+      id = args.first || "me"
+      response = get("#{id}/media", options, signature=false, raw=false, unformatted=true, no_response_wrapper=true, graph_request: true)
       response
     end
 
@@ -177,10 +177,10 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def user_liked_media(options={})
-      response = get("users/self/media/liked", options)
-      response
-    end
+    # def user_liked_media(options={})
+    #   response = get("users/self/media/liked", options)
+    #   response
+    # end
 
     # Returns information about the current user's relationship (follow/following/etc) to another user
     #
@@ -194,10 +194,10 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def user_relationship(id, options={})
-      response = get("users/#{id}/relationship", options)
-      response
-    end
+    # def user_relationship(id, options={})
+    #   response = get("users/#{id}/relationship", options)
+    #   response
+    # end
 
     # Create a follows relationship between the current user and the target user
     #
@@ -211,11 +211,11 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def follow_user(id, options={})
-      options["action"] = "follow"
-      response = post("users/#{id}/relationship", options, signature=true)
-      response
-    end
+    # def follow_user(id, options={})
+    #   options["action"] = "follow"
+    #   response = post("users/#{id}/relationship", options, signature=true)
+    #   response
+    # end
 
     # Destroy a follows relationship between the current user and the target user
     #
@@ -229,11 +229,11 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def unfollow_user(id, options={})
-      options["action"] = "unfollow"
-      response = post("users/#{id}/relationship", options, signature=true)
-      response
-    end
+    # def unfollow_user(id, options={})
+    #   options["action"] = "unfollow"
+    #   response = post("users/#{id}/relationship", options, signature=true)
+    #   response
+    # end
 
     # Block a relationship between the current user and the target user
     #
@@ -247,11 +247,11 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def block_user(id, options={})
-      options["action"] = "block"
-      response = post("users/#{id}/relationship", options, signature=true)
-      response
-    end
+    # def block_user(id, options={})
+    #   options["action"] = "block"
+    #   response = post("users/#{id}/relationship", options, signature=true)
+    #   response
+    # end
 
     # Remove a relationship block between the current user and the target user
     #
@@ -265,11 +265,11 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def unblock_user(id, options={})
-      options["action"] = "unblock"
-      response = post("users/#{id}/relationship", options, signature=true)
-      response
-    end
+    # def unblock_user(id, options={})
+    #   options["action"] = "unblock"
+    #   response = post("users/#{id}/relationship", options, signature=true)
+    #   response
+    # end
 
     # Approve a relationship request between the current user and the target user
     #
@@ -283,11 +283,11 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def approve_user(id, options={})
-      options["action"] = "approve"
-      response = post("users/#{id}/relationship", options, signature=true)
-      response
-    end
+    # def approve_user(id, options={})
+    #   options["action"] = "approve"
+    #   response = post("users/#{id}/relationship", options, signature=true)
+    #   response
+    # end
 
     # Deny a relationship request between the current user and the target user
     #
@@ -301,10 +301,10 @@ module Instagram
     # @format :json
     # @authenticated true
     # @rate_limited true
-    def deny_user(id, options={})
-      options["action"] = "deny"
-      response = post("users/#{id}/relationship", options, signature=true)
-      response
-    end
+    # def deny_user(id, options={})
+    #   options["action"] = "deny"
+    #   response = post("users/#{id}/relationship", options, signature=true)
+    #   response
+    # end
   end
 end

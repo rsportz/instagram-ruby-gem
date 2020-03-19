@@ -15,6 +15,8 @@ module Instagram
       :scope,
       :redirect_uri,
       :endpoint,
+      :token_endpoint,
+      :graph_api_endpoint,
       :format,
       :proxy,
       :user_agent,
@@ -47,6 +49,10 @@ module Instagram
     #
     # @note There is no reason to use any other endpoint at this time
     DEFAULT_ENDPOINT = 'https://api.instagram.com/v1/'.freeze
+
+    # Use graph end point for the new instagram basic display api
+    TOKEN_ENDPOINT = 'https://api.instagram.com/'.freeze
+    GRAPH_API_ENDPOINT = 'https://graph.instagram.com/'.freeze
 
     # The response format appended to the path and sent in the 'Accept' header if none is set
     #
@@ -111,6 +117,8 @@ module Instagram
       self.scope              = DEFAULT_SCOPE
       self.redirect_uri       = DEFAULT_REDIRECT_URI
       self.endpoint           = DEFAULT_ENDPOINT
+      self.token_endpoint   = TOKEN_ENDPOINT
+      self.graph_api_endpoint = GRAPH_API_ENDPOINT
       self.format             = DEFAULT_FORMAT
       self.proxy              = DEFAULT_PROXY
       self.user_agent         = DEFAULT_USER_AGENT

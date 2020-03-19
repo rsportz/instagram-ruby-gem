@@ -17,7 +17,7 @@ module Instagram
       # @see http://instagram.com/developer/endpoints/media/#get_media
       def media_item(*args)
         id = args.first || 'self'
-        response = get("media/#{id}")
+        response = get("media/#{id}", args)
         response
       end
 
@@ -36,7 +36,7 @@ module Instagram
       # @see http://instagram.com/developer/endpoints/media/#get_media_by_shortcode
       def media_shortcode(*args)
         shortcode = args.first
-        response = get("media/shortcode/#{shortcode}", {}, false, false, true)
+        response = get("media/shortcode/#{shortcode}", args, false, false, true)
         response
       end
 
