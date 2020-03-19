@@ -117,7 +117,7 @@ module Instagram
       self.scope              = DEFAULT_SCOPE
       self.redirect_uri       = DEFAULT_REDIRECT_URI
       self.endpoint           = DEFAULT_ENDPOINT
-      self.token_endpoint   = TOKEN_ENDPOINT
+      self.token_endpoint     = TOKEN_ENDPOINT
       self.graph_api_endpoint = GRAPH_API_ENDPOINT
       self.format             = DEFAULT_FORMAT
       self.proxy              = DEFAULT_PROXY

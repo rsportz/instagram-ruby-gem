@@ -158,7 +158,8 @@ module Instagram
     #   If getting this data of a protected user, you must authenticate (and be allowed to see that user).
     # @rate_limited true
     def user_recent_media(*args)
-      options = args.last.is_a?(Hash) ? args.pop : {}
+      options = args.last.is_a?(Hash) ? args.pop.select{|k,v| v.present?} : {}
+      options[:fields] = 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username'
       id = args.first || "me"
       response = get("#{id}/media", options, signature=false, raw=false, unformatted=true, no_response_wrapper=true, graph_request: true)
       response
