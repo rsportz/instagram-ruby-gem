@@ -10,14 +10,5 @@ module Instagram
 
     include Instagram::Client::Users
     include Instagram::Client::Media
-
-    # @deprecated
-    # include Instagram::Client::Locations
-    # include Instagram::Client::Geographies
-    # include Instagram::Client::Tags
-    # include Instagram::Client::Comments
-    # include Instagram::Client::Likes
-    # include Instagram::Client::Subscriptions
-    # include Instagram::Client::Embedding
   end
 end
