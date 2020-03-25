@@ -8,7 +8,7 @@ module FaradayMiddleware
       @app.call(env).on_complete do |response|
         case response[:status].to_i
         when 400
-          raise Instagram::BadRequest, error_message_400(response)
+          raise Instagram::BadRequest, error_message_400(response, 'Invalid OAuth access token')
         when 404
           raise Instagram::NotFound, error_message_400(response)
         when 429
@@ -32,8 +32,8 @@ module FaradayMiddleware
 
     private
 
-    def error_message_400(response)
-      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{response[:status]}#{error_body(response[:body])}"
+    def error_message_400(response, body=nil)
+      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{response[:status]} #{error_body(response[:body]) || body}"
     end
 
     def error_body(body)
