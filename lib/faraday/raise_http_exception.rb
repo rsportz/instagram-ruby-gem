@@ -45,15 +45,15 @@ module FaradayMiddleware
 
       if body.nil?
         nil
-      elsif body['meta'] and body['meta']['error_message'] and not body['meta']['error_message'].empty?
-        ": #{body['meta']['error_message']}"
-      elsif body['error_message'] and not body['error_message'].empty?
-        ": #{body['error_type']}: #{body['error_message']}"
+      elsif body['error'] and body['error']['message'] and not body['error']['message'].empty?
+        ": #{body['error']['message']}"
+      elsif body['error'] and not body['message'].empty?
+        ": #{body.to_s}"
       end
     end
 
     def error_message_500(response, body=nil)
-      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
+      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{[response[:status].to_s + ':', error_body(response[:body]) ,body].compact.join(' ')}"
     end
   end
 end

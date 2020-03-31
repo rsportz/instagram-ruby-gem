@@ -24,6 +24,10 @@ module Instagram
       request(:delete, path, options, signature, raw, unformatted, no_response_wrapper, signed, graph_request)
     end
 
+    def graph_get(path, options={})
+      get(path, options, unformatted: true, no_response_wrapper: true, graph_request: true)
+    end
+
     private
 
     # Perform an HTTP request
