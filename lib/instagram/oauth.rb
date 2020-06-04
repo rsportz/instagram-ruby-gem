@@ -37,6 +37,12 @@ module Instagram
       get("/access_token/", options, unformatted: true, no_response_wrapper: true, graph_request: true)
     end
 
+    def refresh_instagram_token(long_live_access_token, options={})
+      options[:grant_type] = 'ig_refresh_token'
+      options[:access_token] = long_live_access_token
+      get("/refresh_access_token/", options, unformatted: true, no_response_wrapper: true, graph_request: true)
+    end
+
     private
 
     def authorization_params
