@@ -4,11 +4,23 @@ require 'faraday'
 module FaradayMiddleware
   # @private
   class RaiseHttpException < Faraday::Middleware
+    TOKEN_EXPIRED_ERROR_CODES = {
+      '190' => 'Access token has expired',
+      '460' => 'Password Changed',
+      '463' => 'Login status or access token has expired, been revoked, or is otherwise invalid',
+      '467' => 'Access token has expired, been revoked, or is otherwise invalid',
+      '492' => 'Invalid Session'
+    }
+
     def call(env)
       @app.call(env).on_complete do |response|
         case response[:status].to_i
         when 400
-          raise Instagram::BadRequest, error_message_400(response)
+          if access_token_expired?(response)
+            raise Instagram::AccessTokenExpired, error_message_400(response, token_expired_message(response))
+          else
+            raise Instagram::BadRequest, error_message_400(response, 'Invalid OAuth access token')
+          end
         when 404
           raise Instagram::NotFound, error_message_400(response)
         when 429
@@ -32,8 +44,29 @@ module FaradayMiddleware
 
     private
 
-    def error_message_400(response)
-      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{response[:status]}#{error_body(response[:body])}"
+    def token_expired_message(response)
+      TOKEN_EXPIRED_ERROR_CODES[error_code(response)]
+    end
+
+    def access_token_expired?(response)
+      body = error_body(response[:body])
+
+      if body.present?
+        code = error_code(response)
+        if code.present?
+          return TOKEN_EXPIRED_ERROR_CODES[code.to_s].present?
+        end
+      end
+
+      false
+    end
+
+    def error_message_400(response, body=nil)
+      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{[response[:status].to_s + ':', error_body_message(response), body].compact.join(' ')}"
+    end
+
+    def error_message_500(response, body=nil)
+      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{[response[:status].to_s + ':', error_body_message(response), body].compact.join(' ')}"
     end
 
     def error_body(body)
@@ -43,17 +76,24 @@ module FaradayMiddleware
         body = ::JSON.parse(body)
       end
 
-      if body.nil?
-        nil
-      elsif body['meta'] and body['meta']['error_message'] and not body['meta']['error_message'].empty?
-        ": #{body['meta']['error_message']}"
-      elsif body['error_message'] and not body['error_message'].empty?
-        ": #{body['error_type']}: #{body['error_message']}"
-      end
+      body
     end
 
-    def error_message_500(response, body=nil)
-      "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{[response[:status].to_s + ':', body].compact.join(' ')}"
+    def error_code(response)
+      body =  error_body(response[:body])
+      body.dig('error').dig('code')
+    end
+
+    def error_body_message(response)
+      body = error_body(response['body'])
+
+      if body.nil?
+        nil
+      elsif body['error'] and body['error']['message'] and not body['error']['message'].empty?
+        ": #{body['error']['message']}"
+      elsif body['error'] and not body['message'].empty?
+        ": #{body.to_s}"
+      end
     end
   end
 end

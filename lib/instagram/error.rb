@@ -5,6 +5,8 @@ module Instagram
   # Raised when Instagram returns the HTTP status code 400
   class BadRequest < Error; end
 
+  class AccessTokenExpired < Error; end
+
   # Raised when Instagram returns the HTTP status code 404
   class NotFound < Error; end
 

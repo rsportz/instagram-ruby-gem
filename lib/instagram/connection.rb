@@ -6,11 +6,13 @@ module Instagram
   module Connection
     private
 
-    def connection(raw=false)
+    def connection(raw=false, graph_request=false)
+      end_point = graph_request ? graph_api_endpoint : token_endpoint
+
       options = {
         :headers => {'Accept' => "application/#{format}; charset=utf-8", 'User-Agent' => user_agent},
         :proxy => proxy,
-        :url => endpoint,
+        :url => end_point,
       }.merge(connection_options)
 
       Faraday::Connection.new(options) do |connection|
