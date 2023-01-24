@@ -34,7 +34,7 @@ module Instagram
       options[:grant_type] = 'ig_exchange_token'
       options[:client_secret] = self.client_secret
       options[:access_token] = short_live_access_token
-      get("/access_token/", options, unformatted: true, no_response_wrapper: true, graph_request: true)
+      post("/access_token/", options, unformatted: true, no_response_wrapper: true, graph_request: true)
     end
 
     def refresh_instagram_token(long_live_access_token, options={})
